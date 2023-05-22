@@ -1,0 +1,67 @@
+body{
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 18px;
+}
+.Board{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
+    width: 800px;
+    height: 800px;
+    background-color: lightblue;
+}
+.square1{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(118,150,86,255);
+    color:rgba(238,238,210,255);
+}
+
+.square2{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background-color:rgba(238,238,210,255);
+    color:rgba(118,150,86,255);
+}
+.piece{
+    display: flex;
+    margin:auto;
+    width: 75%;
+    pointer-events: none
+}
+.piecePawn{
+    display: flex;
+    margin: auto;
+    width: 65%;
+    pointer-events: none
+
+}
+.pieceButtton{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    border:0;
+}
+.dot1 {
+    position: absolute;
+    height: 30%;
+    width: 30%;
+    background-color: rgba(0, 0, 0);
+    opacity: 0;
+    border-radius: 50%;
+    pointer-events: none
+}
+.dot2 {
+    position: absolute;
+    height: 30%;
+    width: 30%;
+    background-color: rgba(0, 0, 0);
+    opacity: 0;
+    border-radius: 50%;
+    pointer-events: none
+}
