@@ -2,6 +2,7 @@
 const greenSquares = []
 const whiteSquares = []
 const matrix1 = []
+const color = 'White'
 
 function r1(x1, x2, y) {
     const m1 = []
@@ -71,14 +72,17 @@ function r2(x1, x2, y) {
     matrix1.push(m1);
 };
 for (let i = 0; i < 4; i++) {
-    /* to invert board
-    const l1 = ['1','3','5','7']
-    const l2 = ['2','4','6','8']
-    */
-    const l1 = ['8', '6', '4', '2'];
-    const l2 = ['7', '5', '3', '1'];
-    r1(['A', 'C', 'E', 'G'], ['B', 'D', 'F', 'H'], l1[i]);
-    r2(['A', 'C', 'E', 'G'], ['B', 'D', 'F', 'H'], l2[i]);
+    if (color == "White"){
+        const l1 = ['8', '6', '4', '2'];
+        const l2 = ['7', '5', '3', '1'];
+        r1(['A', 'C', 'E', 'G'], ['B', 'D', 'F', 'H'], l1[i]);
+        r2(['A', 'C', 'E', 'G'], ['B', 'D', 'F', 'H'], l2[i]); 
+    } else {
+        const l1 = ['1','3','5','7']
+        const l2 = ['2','4','6','8']
+        r1(['A', 'C', 'E', 'G'], ['B', 'D', 'F', 'H'], l1[i]);
+        r2(['A', 'C', 'E', 'G'], ['B', 'D', 'F', 'H'], l2[i]);
+    }
 };
 
 //Place Pieces
@@ -149,4 +153,4 @@ for(let i1 = 0; i1 < 8; i1++){
     placePiece(bPawn, pawnsBlack[i1], `BlackPawn${i1+1}`)
 }
 
-export {matrix1, greenSquares}
+export {matrix1, color}
