@@ -702,29 +702,31 @@ function king(x){
             if (matrix1[yPos][xPos+1]){//Up
                 nPos.push(matrix1[yPos][xPos+1])
             }
-            if (matrix1[yPos+1][xPos+1]){//Up
-                nPos.push(matrix1[yPos+1][xPos+1])
-            }
-            if (matrix1[yPos-1][xPos+1]){ //Down
-                nPos.push(matrix1[yPos-1][xPos+1])
-            }
-            //Up
-            if (matrix1[yPos+1]){//Up
-                nPos.push(matrix1[yPos+1][xPos])
-            }
             //Left
             if (matrix1[yPos][xPos-1]){
                 nPos.push(matrix1[yPos][xPos-1])
             }
-            if (matrix1[yPos+1][xPos-1]){ //Up
-                nPos.push(matrix1[yPos+1][xPos-1])
+            if (matrix1[yPos+1]){
+                if (matrix1[yPos+1][xPos+1]){//Up
+                    nPos.push(matrix1[yPos+1][xPos+1])
+                }
+                if (matrix1[yPos+1]){//Up
+                    nPos.push(matrix1[yPos+1][xPos])
+                }
+                if (matrix1[yPos+1][xPos-1]){//Up
+                    nPos.push(matrix1[yPos+1][xPos-1])
+                }
             }
-            if (matrix1[yPos-1][xPos-1]){ //Down
-                nPos.push(matrix1[yPos-1][xPos-1])
-            }
-            //down
             if (matrix1[yPos-1]){
-                nPos.push(matrix1[yPos-1][xPos])                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              -1][xPos])
+                if (matrix1[yPos-1][xPos+1]){ //Down
+                    nPos.push(matrix1[yPos-1][xPos+1])
+                }
+                if (matrix1[yPos-1]){
+                    nPos.push(matrix1[yPos-1][xPos])
+                }
+                if (matrix1[yPos-1][xPos-1]){ //Down
+                    nPos.push(matrix1[yPos-1][xPos-1])
+                }
             }
             unsafeSquares.push(...nPos)
         }
@@ -767,36 +769,40 @@ function king(x){
                 } 
             }
         }
-            
+        for (let i in unsafeSquares){
+            document.getElementById(unsafeSquares[i]).style.backgroundColor = 'rgba(255, 0, 0, 255)';
+        }            
         //Right
         if (matrix1[yPos][xPos+1]){//Up
             nPos.push(matrix1[yPos][xPos+1])
-        }
-        if (matrix1[yPos+1][xPos+1]){//Up
-            nPos.push(matrix1[yPos+1][xPos+1])
-        }
-        if (matrix1[yPos-1][xPos+1]){ //Down
-            nPos.push(matrix1[yPos-1][xPos+1])
-        }
-        //Up
-        if (matrix1[yPos+1]){//Up
-            nPos.push(matrix1[yPos+1][xPos])
         }
         //Left
         if (matrix1[yPos][xPos-1]){
             nPos.push(matrix1[yPos][xPos-1])
         }
-        if (matrix1[yPos+1][xPos-1]){ //Up
-            nPos.push(matrix1[yPos+1][xPos-1])
+        if (matrix1[yPos+1]){
+            if (matrix1[yPos+1][xPos+1]){//Up
+                nPos.push(matrix1[yPos+1][xPos+1])
+            }
+            if (matrix1[yPos+1]){//Up
+                nPos.push(matrix1[yPos+1][xPos])
+            }
+            if (matrix1[yPos+1][xPos-1]){//Up
+                nPos.push(matrix1[yPos+1][xPos-1])
+            }
         }
-        if (matrix1[yPos-1][xPos-1]){ //Down
-            nPos.push(matrix1[yPos-1][xPos-1])
-        }
-        //down
         if (matrix1[yPos-1]){
-            nPos.push(matrix1[yPos-1][xPos])                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              -1][xPos])
+            if (matrix1[yPos-1][xPos+1]){ //Down
+                nPos.push(matrix1[yPos-1][xPos+1])
+            }
+            if (matrix1[yPos-1]){
+                nPos.push(matrix1[yPos-1][xPos])
+            }
+            if (matrix1[yPos-1][xPos-1]){ //Down
+                nPos.push(matrix1[yPos-1][xPos-1])
+            }
         }
-        console.log(nPos)
+        const set = new Set(unsafeSquares) 
         
         //obstructions
         const d = []
@@ -808,12 +814,16 @@ function king(x){
                     d.push(nPos[i])
                 }
             }
+            if (set.has(nPos[i])){
+                if (d.indexOf(nPos[i])){
+                    d.push(nPos[i])
+                }
+            }
         }
         for (let i =0;i<d.length;i++){
             nPos.splice(nPos.indexOf(d[i]),1)
         }
         changeOpacity('.3')
-        const set = new Set(unsafeSquares) 
     }
 }
 //Actions
