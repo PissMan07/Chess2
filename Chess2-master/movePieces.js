@@ -2,8 +2,6 @@ import {matrix1, color} from './buildBoard.js';
 const nPos = []
 const opps = []
 let clickedPiece = null
-const green = 'rgba(238,238,210,255)'
-const white = `rgba(118,150,86,255)`
 const regColor = new RegExp(color)
 
 //pieces
@@ -39,7 +37,6 @@ function move(pos){
             }
             if (position.classList[0][position.classList[0].length-1]=='2'){ //if class is square 2 in css
                 position.appendChild(piece)
-                piece.style.backgroundColor = green
                 changeOpacity('0')
                 if (p.test(clickedPiece)){ //test for pawn
                     if (color == 'White'){
@@ -52,7 +49,6 @@ function move(pos){
                 nPos.length = 0
             } else { //checks if it is square 1
                 position.appendChild(piece)
-                piece.style.backgroundColor = white
                 changeOpacity('0')
                 if (p.test(clickedPiece)){ //test for pawn
                     if (color == 'White'){
@@ -152,7 +148,6 @@ function pawn(x, start, end, sign){
         clickedPiece = x.id
         changeOpacity('0')
         nPos.length = 0
-
         //walk straight
         if (yPos == start){
             if (matrix1[yPos+(2*sign)]){ 
@@ -262,7 +257,6 @@ function bishop(x){
                 const position = document.getElementById(h[i])
                 if (position.childElementCount > 1){ //check for obstruction
                     if (clickedPiece[0] !== position.children[1].id[0]){
-                        console.log(h[i])
                         nPos.push(h[i])
                         i = h.length
                         return
@@ -417,8 +411,6 @@ function queen(x){
                 const position = document.getElementById(h[i])
                 if (position.childElementCount > 1){ //check for obstruction
                     if (clickedPiece[0] !== position.children[1].id[0]){ //check color 
-                        console.log(clickedPiece[0])
-                        console.log(position.children[1].id[0])
                         nPos.push(h[i])
                         i = h.length
                         return
@@ -440,7 +432,6 @@ function queen(x){
         a(lU)
         a(rD)
         a(lD)
-        console.log(nPos)
         changeOpacity('.3')
     } else { //clicked again
         clickedPiece = null
@@ -450,262 +441,379 @@ function queen(x){
 }
 
 function king(x){
-    const unsafeSquares = []
-    function uKnighst(x){
+    if (clickedPiece !== x.id){
+        //Variables
         const pos = x.parentNode.id;
         const yPos = (pos[1]-1)
         const xPos = pos.charCodeAt(0)-65
-        const nPos = []
-        //Functions
-        function right(sign, x){
-            if (x){
-                if (matrix1[yPos][xPos+2]){ //check right 2
-                    nPos.push(matrix1[yPos+2*(sign)][xPos+1],matrix1[yPos+1*(sign)][xPos+2]); //add 2 pos
-                } else if (matrix1[yPos][xPos+1]){ //else check right 1
-                    nPos.push(matrix1[yPos+2*(sign)][xPos+1]); //add 1 pos
+        clickedPiece = x.id
+        changeOpacity('0')
+        nPos.length = 0
+        const unsafeSquares = []
+        function uKnight(x){
+            const pos = x.parentNode.id;
+            const yPos = (pos[1]-1)
+            const xPos = pos.charCodeAt(0)-65
+            const nPos = []
+            //Functions
+            function right(sign, x){
+                if (x){
+                    if (matrix1[yPos][xPos+2]){ //check right 2
+                        nPos.push(matrix1[yPos+2*(sign)][xPos+1],matrix1[yPos+1*(sign)][xPos+2]); //add 2 pos
+                    } else if (matrix1[yPos][xPos+1]){ //else check right 1
+                        nPos.push(matrix1[yPos+2*(sign)][xPos+1]); //add 1 pos
+                    };
+                } else{
+                    if (matrix1[yPos][xPos+2]){ //check right 2
+                        nPos.push(matrix1[yPos+1*(sign)][xPos+2]); //add 2 pos
+                    };
+                }
+            }
+            function left(sign, x){
+                if (x){
+                    if (matrix1[yPos][xPos-2]){ //check left 2
+                        nPos.push(matrix1[yPos+2*(sign)][xPos-1],matrix1[yPos+1*(sign)][xPos-2]); //add 2 pos
+                    } else if (matrix1[yPos][xPos-1]){ //else check right 1
+                        nPos.push(matrix1[yPos+2*(sign)][xPos-1]); //add 1 pos
+                    };
+                } else{
+                    if (matrix1[yPos][xPos-2]){ //check left 2
+                        nPos.push(matrix1[yPos+1*(sign)][xPos-2]); //add 2 pos
+                    };
+                }
+            }
+            
+            //Actions
+            //Avaliable Spaces
+            if (matrix1[yPos+2]){ //check up 2
+                right(1, true)
+                left(1, true)
+            } else if (matrix1[yPos+1]){ //check up 1
+                right(1, false)
+                left(1, false)
+            };
+            if (matrix1[yPos-2]){ //check down 2
+                right(-1, true)
+                left(-1, true)
+            } else if (matrix1[yPos-1]){ //check down 1
+                right(-1, false)
+                left(-1, false)
+            };
+            unsafeSquares.push(...nPos)
+        }
+        function uQueen(x){
+            const pos = x.parentNode.id;
+            const yPos = (pos[1]-1)
+            const xPos = pos.charCodeAt(0)-65
+            const u = []
+            const d = []
+            const l = []
+            const r = []
+            const rU = []
+            const rD = []
+            const lU = []
+            const lD = []
+            const nPos = []
+            //Right
+            for (let i = 1;i<(Math.abs(xPos-8));i++){
+                if (matrix1[yPos][xPos+i]){//Up
+                    r.push(matrix1[yPos][xPos+i])
+                }
+                if (matrix1[yPos+i]){//Up
+                    rU.push(matrix1[yPos+i][xPos+i])
+                }
+                if (matrix1[yPos-i]){ //Down
+                    rD.push(matrix1[yPos-i][xPos+i])
+                }
+            }
+            //Up
+            for (let i = 1;i<(Math.abs(yPos-8));i++){
+                if (matrix1[yPos+i]){//Up
+                    u.push(matrix1[yPos+i][xPos])
+                }
+            }
+            //Left
+            for (let i = 1;i<xPos+1;i++){
+                if (matrix1[yPos][xPos-i]){
+                    l.push(matrix1[yPos][xPos-i])
+                }
+                if (matrix1[yPos+i]){ //Up
+                    lU.push(matrix1[yPos+i][xPos-i])
+                }
+                if (matrix1[yPos-i]){ //Down
+                    lD.push(matrix1[yPos-i][xPos-i])
+                }
+            }
+            //down
+            for (let i = 1;i<yPos+1;i++){
+                if (matrix1[yPos-i]){
+                    d.push(matrix1[yPos-i][xPos])
+                }
+            }
+            function a(h){
+                for (let i = 0;i<h.length;i++){
+                    const position = document.getElementById(h[i])
+                    if (position.childElementCount > 1){ //check for obstruction
+                        nPos.push(h[i])
+                        i = h.length
+                        return
+                    } else {
+                        nPos.push(h[i])
+                    }
+                }
+            }
+
+            a(r)
+            a(u)
+            a(l)
+            a(d)
+            a(rU)
+            a(lU)
+            a(rD)
+            a(lD)
+            unsafeSquares.push(...nPos)
+        }
+        function uBishop(x){
+            const pos = x.parentNode.id;
+            const yPos = (pos[1]-1)
+            const xPos = pos.charCodeAt(0)-65
+            const nPos = []
+            const rU = []
+            const rD = []
+            const lU = []
+            const lD = []
+            //Right
+            for (let i = 1;i<(Math.abs(xPos-8));i++){
+                if (matrix1[yPos+i]){//Up
+                    rU.push(matrix1[yPos+i][xPos+i])
+                }
+                if (matrix1[yPos-i]){ //Down
+                    rD.push(matrix1[yPos-i][xPos+i])
+                }
+            }
+            //Left
+            for (let i = 1;i<xPos+1;i++){
+                if (matrix1[yPos+i]){ //Up
+                    lU.push(matrix1[yPos+i][xPos-i])
+                }
+                if (matrix1[yPos-i]){ //Down
+                    lD.push(matrix1[yPos-i][xPos-i])
+                }
+            }
+
+            //Check for obstructions
+            function a(h){
+                for (let i = 0;i<h.length;i++){
+                    const position = document.getElementById(h[i])
+                    if (position.childElementCount > 1){ //check for obstruction
+                        nPos.push(h[i])
+                        i = h.length
+                        return
+                    } else {
+                        nPos.push(h[i])
+                    }
+                }
+            }
+
+            a(rU)
+            a(lU)
+            a(rD)
+            a(lD)
+            unsafeSquares.push(...nPos)
+        }
+        function uRook(x){
+            const pos = x.parentNode.id;
+            const yPos = (pos[1]-1)
+            const xPos = pos.charCodeAt(0)-65
+            const nPos = []
+            const u = []
+            const d = []
+            const l = []
+            const r = []
+            //Right
+            for (let i = 1;i<(Math.abs(xPos-8));i++){
+                if (matrix1[yPos][xPos+i]){//Up
+                    r.push(matrix1[yPos][xPos+i])
+                }
+            }
+            //Up
+            for (let i = 1;i<(Math.abs(yPos-8));i++){
+                if (matrix1[yPos+i]){//Up
+                    u.push(matrix1[yPos+i][xPos])
+                }
+            }
+            //Left
+            for (let i = 1;i<xPos+1;i++){
+                if (matrix1[yPos][xPos-i]){
+                    l.push(matrix1[yPos][xPos-i])
+                }
+            }
+            //down
+            for (let i = 1;i<yPos+1;i++){
+                if (matrix1[yPos-i]){
+                    d.push(matrix1[yPos-i][xPos])
+                }
+            }
+
+            //Check for obstructions
+            function a(h){
+                for (let i = 0;i<h.length;i++){
+                    const position = document.getElementById(h[i])
+                    if (position.childElementCount > 1){ //check for obstruction
+                        nPos.push(h[i])
+                        i = h.length
+                        return
+                    } else {
+                        nPos.push(h[i])
+                    }
+                }
+            }
+
+            a(r)
+            a(u)
+            a(l)
+            a(d)
+            unsafeSquares.push(...nPos)
+        }
+        function uPawn(x, sign){
+            const pos = x.parentNode.id;
+            const yPos = (pos[1]-1)
+            const xPos = pos.charCodeAt(0)-65
+            const nPos = []
+            console.log(x)
+            console.log(yPos)
+            console.log(xPos)
+            console.log(pos)
+            
+            if (matrix1[yPos+(1*sign)][xPos+1]){
+                nPos.push(matrix1[yPos+(1*sign)][xPos+1])
+            }
+            if (matrix1[yPos+(1*sign)][xPos-1]){
+                nPos.push(matrix1[yPos+(1*sign)][xPos-1])
+            }
+            unsafeSquares.push(...nPos)
+        }
+        function uKing(x){
+            const pos = x.parentNode.id;
+            const yPos = (pos[1]-1)
+            const xPos = pos.charCodeAt(0)-65
+            const nPos = []
+            //Right
+            if (matrix1[yPos][xPos+1]){//Up
+                nPos.push(matrix1[yPos][xPos+1])
+            }
+            if (matrix1[yPos+1][xPos+1]){//Up
+                nPos.push(matrix1[yPos+1][xPos+1])
+            }
+            if (matrix1[yPos-1][xPos+1]){ //Down
+                nPos.push(matrix1[yPos-1][xPos+1])
+            }
+            //Up
+            if (matrix1[yPos+1]){//Up
+                nPos.push(matrix1[yPos+1][xPos])
+            }
+            //Left
+            if (matrix1[yPos][xPos-1]){
+                nPos.push(matrix1[yPos][xPos-1])
+            }
+            if (matrix1[yPos+1][xPos-1]){ //Up
+                nPos.push(matrix1[yPos+1][xPos-1])
+            }
+            if (matrix1[yPos-1][xPos-1]){ //Down
+                nPos.push(matrix1[yPos-1][xPos-1])
+            }
+            //down
+            if (matrix1[yPos-1]){
+                nPos.push(matrix1[yPos-1][xPos])                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              -1][xPos])
+            }
+            unsafeSquares.push(...nPos)
+        }
+
+        for (let x in opps){
+            if (opps[x].parentNode != null){
+                //Knight
+                if (h.test(opps[x].id)){
+                    uKnight(opps[x])
                 };
-            } else{
-                if (matrix1[yPos][xPos+2]){ //check right 2
-                    nPos.push(matrix1[yPos+1*(sign)][xPos+2]); //add 2 pos
+                //Pawn
+                if (p.test(opps[x].id)){
+                    if (regColor.test(opps[x].id)){
+                        if (color == 'White'){
+                            console.log("Opps Black")
+                            uPawn(opps[x],-1)
+                            console.log("Pawn",unsafeSquares)
+                        } else {
+                            console.log("Opps White")
+                            uPawn(opps[x],1)
+                            console.log("Pawn",unsafeSquares)
+                        }
+                    };
                 };
+                //Bishop
+                if (b.test(opps[x].id)){
+                    uBishop(opps[x])
+                };
+                //Rook
+                if (r.test(opps[x].id)){
+                    uRook(opps[x])
+                }
+                //Queen
+                if (q.test(opps[x].id)){
+                    uQueen(opps[x])
+                }
+                //King
+                if (k.test(opps[x].id)){
+                    uKing(opps[x])
+                } 
             }
         }
-        function left(sign, x){
-            if (x){
-                if (matrix1[yPos][xPos-2]){ //check left 2
-                    nPos.push(matrix1[yPos+2*(sign)][xPos-1],matrix1[yPos+1*(sign)][xPos-2]); //add 2 pos
-                } else if (matrix1[yPos][xPos-1]){ //else check right 1
-                    nPos.push(matrix1[yPos+2*(sign)][xPos-1]); //add 1 pos
-                };
-            } else{
-                if (matrix1[yPos][xPos-2]){ //check left 2
-                    nPos.push(matrix1[yPos+1*(sign)][xPos-2]); //add 2 pos
-                };
-            }
+            
+        //Right
+        if (matrix1[yPos][xPos+1]){//Up
+            nPos.push(matrix1[yPos][xPos+1])
         }
+        if (matrix1[yPos+1][xPos+1]){//Up
+            nPos.push(matrix1[yPos+1][xPos+1])
+        }
+        if (matrix1[yPos-1][xPos+1]){ //Down
+            nPos.push(matrix1[yPos-1][xPos+1])
+        }
+        //Up
+        if (matrix1[yPos+1]){//Up
+            nPos.push(matrix1[yPos+1][xPos])
+        }
+        //Left
+        if (matrix1[yPos][xPos-1]){
+            nPos.push(matrix1[yPos][xPos-1])
+        }
+        if (matrix1[yPos+1][xPos-1]){ //Up
+            nPos.push(matrix1[yPos+1][xPos-1])
+        }
+        if (matrix1[yPos-1][xPos-1]){ //Down
+            nPos.push(matrix1[yPos-1][xPos-1])
+        }
+        //down
+        if (matrix1[yPos-1]){
+            nPos.push(matrix1[yPos-1][xPos])                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              -1][xPos])
+        }
+        console.log(nPos)
         
-        //Actions
-        //Avaliable Spaces
-        if (matrix1[yPos+2]){ //check up 2
-            right(1, true)
-            left(1, true)
-        } else if (matrix1[yPos+1]){ //check up 1
-            right(1, false)
-            left(1, false)
-        };
-        if (matrix1[yPos-2]){ //check down 2
-            right(-1, true)
-            left(-1, true)
-        } else if (matrix1[yPos-1]){ //check down 1
-            right(-1, false)
-            left(-1, false)
-        };
-        unsafeSquares.push(...nPos)
-    }
-    function uQueen(x){
-        const pos = x.parentNode.id;
-        const yPos = (pos[1]-1)
-        const xPos = pos.charCodeAt(0)-65
-        const nPos = []
-        const u = []
+        //obstructions
         const d = []
-        const l = []
-        const r = []
-        const rU = []
-        const rD = []
-        const lU = []
-        const lD = []
-        //Right
-        for (let i = 1;i<(Math.abs(xPos-8));i++){
-            if (matrix1[yPos][xPos+i]){//Up
-                r.push(matrix1[yPos][xPos+i])
-            }
-            if (matrix1[yPos+i]){//Up
-                rU.push(matrix1[yPos+i][xPos+i])
-            }
-            if (matrix1[yPos-i]){ //Down
-                rD.push(matrix1[yPos-i][xPos+i])
-            }
-        }
-        //Up
-        for (let i = 1;i<(Math.abs(yPos-8));i++){
-            if (matrix1[yPos+i]){//Up
-                u.push(matrix1[yPos+i][xPos])
-            }
-        }
-        //Left
-        for (let i = 1;i<xPos+1;i++){
-            if (matrix1[yPos][xPos-i]){
-                l.push(matrix1[yPos][xPos-i])
-            }
-            if (matrix1[yPos+i]){ //Up
-                lU.push(matrix1[yPos+i][xPos-i])
-            }
-            if (matrix1[yPos-i]){ //Down
-                lD.push(matrix1[yPos-i][xPos-i])
-            }
-        }
-        //down
-        for (let i = 1;i<yPos+1;i++){
-            if (matrix1[yPos-i]){
-                d.push(matrix1[yPos-i][xPos])
-            }
-        }
-        function a(h){
-            for (let i = 0;i<h.length;i++){
-                const position = document.getElementById(h[i])
-                if (position.childElementCount > 1){ //check for obstruction
-                    if (clickedPiece[0] !== position.children[1].id[0]){
-                        nPos.push(h[i])
-                        i = h.length
-                        return
-                    } else {
-                        i = h.length
-                    }
-                } else {
-                    nPos.push(h[i])
+        for (let i = 0;i<nPos.length;i++){
+            console.log(nPos[i])
+            const x = document.getElementById(nPos[i])
+            if (x.childElementCount > 1){
+                if (clickedPiece[0] == x.children[1].id[0]){ //check color
+                    d.push(nPos[i])
                 }
             }
         }
-
-        a(r)
-        a(u)
-        a(l)
-        a(d)
-        a(rU)
-        a(lU)
-        a(rD)
-        a(lD)
-    }
-    function uBishop(x){
-        const pos = x.parentNode.id;
-        const yPos = (pos[1]-1)
-        const xPos = pos.charCodeAt(0)-65
-        const nPos = []
-        const rU = []
-        const rD = []
-        const lU = []
-        const lD = []
-        //Right
-        for (let i = 1;i<(Math.abs(xPos-8));i++){
-            if (matrix1[yPos+i]){//Up
-                rU.push(matrix1[yPos+i][xPos+i])
-            }
-            if (matrix1[yPos-i]){ //Down
-                rD.push(matrix1[yPos-i][xPos+i])
-            }
+        for (let i =0;i<d.length;i++){
+            nPos.splice(nPos.indexOf(d[i]),1)
         }
-        //Left
-        for (let i = 1;i<xPos+1;i++){
-            if (matrix1[yPos+i]){ //Up
-                lU.push(matrix1[yPos+i][xPos-i])
-            }
-            if (matrix1[yPos-i]){ //Down
-                lD.push(matrix1[yPos-i][xPos-i])
-            }
-        }
-
-        //Check for obstructions
-        function a(h){
-            for (let i = 0;i<h.length;i++){
-                const position = document.getElementById(h[i])
-                if (position.childElementCount > 1){ //check for obstruction
-                    if (clickedPiece[0] !== position.children[1].id[0]){
-                        nPos.push(h[i])
-                        i = h.length
-                        return
-                    } else {
-                        nPos.push(h[i])
-                        i = h.length
-                        return
-                    }
-                } else {
-                    nPos.push(h[i])
-                }
-            }
-        }
-
-        a(rU)
-        a(lU)
-        a(rD)
-        a(lD)
-        unsafeSquares.push(...nPos)
-    }
-    function uRoot(x){
-        const pos = x.parentNode.id;
-        const yPos = (pos[1]-1)
-        const xPos = pos.charCodeAt(0)-65
-        const nPos = []
-        const u = []
-        const d = []
-        const l = []
-        const r = []
-        //Right
-        for (let i = 1;i<(Math.abs(xPos-8));i++){
-            if (matrix1[yPos][xPos+i]){//Up
-                r.push(matrix1[yPos][xPos+i])
-            }
-        }
-        //Up
-        for (let i = 1;i<(Math.abs(yPos-8));i++){
-            if (matrix1[yPos+i]){//Up
-                u.push(matrix1[yPos+i][xPos])
-            }
-        }
-        //Left
-        for (let i = 1;i<xPos+1;i++){
-            if (matrix1[yPos][xPos-i]){
-                l.push(matrix1[yPos][xPos-i])
-            }
-        }
-        //down
-        for (let i = 1;i<yPos+1;i++){
-            if (matrix1[yPos-i]){
-                d.push(matrix1[yPos-i][xPos])
-            }
-        }
-
-        //Check for obstructions
-        function a(h){
-            for (let i = 0;i<h.length;i++){
-                const position = document.getElementById(h[i])
-                if (position.childElementCount > 1){ //check for obstruction
-                    if (clickedPiece[0] !== position.children[1].id[0]){
-                        nPos.push(h[i])
-                        i = h.length
-                        return
-                    } else {
-                        nPos.push(h[i])
-                        i = h.length
-                        return
-                    }
-                } else {
-                    nPos.push(h[i])
-                }
-            }
-        }
-
-        a(r)
-        a(u)
-        a(l)
-        a(d)
-        unsafeSquares.push(...nPos)
-    }
-    function uPawn(x){
-        const pos = x.parentNode.id;
-        const yPos = (pos[1]-1)
-        const xPos = pos.charCodeAt(0)-65
-        const nPos = []
-        if (matrix1[yPos+(1*sign)][xPos+1]){
-            nPos.push(matrix1[yPos+(1*sign)][xPos+1])
-        }
-        if (matrix1[yPos+(1*sign)][xPos-1]){
-            nPos.push(matrix1[yPos+(1*sign)][xPos-1])
-        }
-        unsafeSquares.push(...nPos)
-    }
-    
-    for (let x in opps){
+        changeOpacity('.3')
+        const set = new Set(unsafeSquares) 
     }
 }
 //Actions
@@ -720,8 +828,8 @@ for (let i = 0;i<matrix1.length;i++){
 
 for (let i = 0;i<pieces.length;i++){
     //get opps
-    if (regColor.test(pieces[i].id)==null){
-        opps.push(pieces[i].id)
+    if (regColor.test(pieces[i].id)==false){
+        opps.push(pieces[i])
     }
     //Knight
     if (h.test(pieces[i].id)){
@@ -739,7 +847,7 @@ for (let i = 0;i<pieces.length;i++){
             }
         };
     };
-    //Bishop
+    //Bishopx
     if (b.test(pieces[i].id)){
         if (regColor.test(pieces[i].id)){
             pieces[i].addEventListener('click',function(){bishop(pieces[i])});
@@ -755,6 +863,12 @@ for (let i = 0;i<pieces.length;i++){
     if (q.test(pieces[i].id)){
         if (regColor.test(pieces[i].id)){
             pieces[i].addEventListener('click',function(){queen(pieces[i])});
+        };
+    }
+    //King
+    if (k.test(pieces[i].id)){
+        if (regColor.test(pieces[i].id)){
+            pieces[i].addEventListener('click',function(){king(pieces[i])});
         };
     }
 }

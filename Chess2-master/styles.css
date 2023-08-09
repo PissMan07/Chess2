@@ -7,8 +7,9 @@ body{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
-    width: 800px;
-    height: 800px;
+    max-width: 800px;
+    max-height: 800px;
+    aspect-ratio: 1/1;
     background-color: lightblue;
 }
 .square1{

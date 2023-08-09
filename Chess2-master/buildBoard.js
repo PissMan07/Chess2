@@ -2,7 +2,7 @@
 const greenSquares = []
 const whiteSquares = []
 const matrix1 = []
-const color = 'White'
+const color = 'Black'
 
 function r1(x1, x2, y) {
     const m1 = []
@@ -117,12 +117,7 @@ function placePiece(image, position, id) {
         i1.classList.add('piece');
     }
     //Change background color
-    if (greenSquares.indexOf(position)>=0){
-        buttonPiece.style.backgroundColor = 'rgba(118,150,86,255)';
-    }else{
-        buttonPiece.style.backgroundColor = 'rgba(238,238,210,255)';
-    }
-
+    buttonPiece.style.backgroundColor = 'rgba(255, 0, 0, 0)';
 }
 
 //Place Black Pieces
@@ -152,5 +147,8 @@ for(let i1 = 0; i1 < 8; i1++){
     placePiece(wPawn, pawnsWhite[i1], `WhitePawn${i1+1}`)
     placePiece(bPawn, pawnsBlack[i1], `BlackPawn${i1+1}`)
 }
-
+if (color == "White"){
+    matrix1.reverse()
+}
+console.log(matrix1)
 export {matrix1, color}
